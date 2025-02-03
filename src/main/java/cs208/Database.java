@@ -348,12 +348,10 @@ public class Database
             Connection connection = getDatabaseConnection();
             Statement sqlStatement = connection.createStatement();
             ResultSet resultSet = sqlStatement.executeQuery(sql);
-        )
-        {
+        ) {
             printTableHeader(new String[]{"id", "first_name", "last_name", "birth_date"});
 
-            while (resultSet.next())
-            {
+            while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String firstName = resultSet.getString("first_name");
                 String lastName = resultSet.getString("last_name");
@@ -361,7 +359,8 @@ public class Database
                 // the resultSet.getDate() does not work in this case, so we're using the getString() method instead
                 String birthDate = resultSet.getString("birth_date");
 
-                // TODO: add your code here
+                //print the results of the row
+                System.out.printf("| %d | %s | %s | %s |%n", id, firstName, lastName, birthDate);
             }
         }
         catch (SQLException sqlException)
