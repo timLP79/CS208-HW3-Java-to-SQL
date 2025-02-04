@@ -381,7 +381,8 @@ public class Database
             Connection connection = getDatabaseConnection();
             Statement sqlStatement = connection.createStatement();
             ResultSet resultSet = sqlStatement.executeQuery(sql);
-        ) {
+        )
+        {
             printTableHeader(new String[]{"id", "first_name", "last_name", "birth_date"});
 
             while (resultSet.next()) {
