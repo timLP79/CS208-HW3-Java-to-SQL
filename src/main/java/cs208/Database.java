@@ -2,6 +2,7 @@ package cs208;
 
 import org.sqlite.SQLiteConfig;
 
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -370,16 +371,40 @@ public class Database
         }
     }
 
-    public void addNewStudent(Student newStudent)
-    {
+    public void addNewStudent(Student newStudent) {
         // 💡 HINT: in a prepared statement
         // to set the date parameter in the format "YYYY-MM-DD", use the code:
         // sqlStatement.setString(columnIndexTBD, newStudent.getBirthDate().toString());
         //
         // to set the date parameter in the unix format (i.e., milliseconds since 1970), use this code:
         // sqlStatement.setDate(columnIndexTBD, newStudent.getBirthDate());
+        String sql = "INSERT INTO students (first_name, last_name, birth_date) VALUES (?, ?, ?);";
+        try
+                (
+                        Connection connection = getDatabaseConnection();
+                        PreparedStatement sqlStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ) {
+            sqlStatement.setString(1, newStudent.getFirstName());
+            sqlStatement.setString(2, newStudent.getLastName());
+            sqlStatement.setString(3, newStudent.getBirthDate().toString());
 
-        // TODO: add your code here
+            int numberOfRowsAffected = sqlStatement.executeUpdate();
+            System.out.println("numberOfRowsAffected = " + numberOfRowsAffected);
+
+            if (numberOfRowsAffected > 0) {
+                ResultSet resultSet = sqlStatement.getGeneratedKeys();
+                while (resultSet.next()) {
+                    int generatedIdForTheNewlyInsertedStudent = resultSet.getInt("last_insert_rowid()");
+                    System.out.println("SUCCESSFULLY inserted a new student with id = " + generatedIdForTheNewlyInsertedStudent);
+                    newStudent.setId(generatedIdForTheNewlyInsertedStudent);
+                }
+                resultSet.close();
+            }
+        } catch (SQLException sqlException)
+        {
+            System.out.println("!!! SQLException: failed to insert into the students table");
+            System.out.println(sqlException.getMessage());
+        }
     }
 
     public void listAllRegisteredStudents()

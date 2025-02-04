@@ -41,3 +41,4 @@ bin/
 *.db3
 *.sqlite
 *.sqlite3
+/hw3_scratchpad.txt

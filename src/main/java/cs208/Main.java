@@ -257,8 +257,10 @@ public class Main
         Date birthDate = null;
         try
         {
-            // TODO: add your code here
-
+            System.out.print("Enter the first name: ");
+            firstName = inputScanner.nextLine();
+            System.out.print("Enter the last name: ");
+            lastName = inputScanner.nextLine();
             System.out.print("Enter the student birth date in ISO format (yyyy-mm-dd): ");
             birthDate = Date.valueOf(inputScanner.nextLine());
         }
@@ -268,7 +270,8 @@ public class Main
             return;
         }
 
-        // TODO: add your code here
+        Student newStudent = new Student(firstName, lastName, birthDate);
+        database.addNewStudent(newStudent);
     }
 
     private static void menuUpdateExistingStudentInformation()
