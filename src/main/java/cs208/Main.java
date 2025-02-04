@@ -306,7 +306,18 @@ public class Main
     {
         System.out.println("Deleting existing student...");
 
-        // TODO: add your code here
+        int id = 0;
+        try
+        {
+            System.out.print("Enter the existing student id you want to delete: ");
+            id = Integer.parseInt(inputScanner.nextLine());
+        }
+        catch (Exception e)
+        {
+            System.out.println("Invalid input, please try again.");
+            return;
+        }
+        database.deleteExistingStudent(id);
     }
 
     private static void menuListAllRegisteredStudents()
