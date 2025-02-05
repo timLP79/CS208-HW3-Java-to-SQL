@@ -135,6 +135,9 @@ public class Main
                 case 31:
                     menuAddNewStudentToClass();
                     break;
+                case 32:
+                    menuDropExistingStudentFromClass();
+                    break;
                 //TODO: add your code here
 
 
@@ -351,6 +354,10 @@ public class Main
         }
 
         database.addNewStudentToClass(student_id, class_id, signupDate);
+    }
+
+    private static void menuDropExistingStudentFromClass() {
+
     }
 
 }
