@@ -12,8 +12,7 @@ public class Main
     {
         System.out.println("Starting the School Management System...");
 
-        // TODO: create a SQLite data source in IntelliJ with this file name
-        String sqliteFileName = "cs208_hw3.sqlite";
+        String sqliteFileName = "cs208_hw3.sqlite"; //Added this filename as the datasource
 
         database = new Database(sqliteFileName);
         try
@@ -132,7 +131,10 @@ public class Main
                 case 30:
                     menuListAllRegisteredStudents();
                     break;
-
+                    
+                case 31:
+                    menuAddNewStudentToClass();
+                    break;
                 //TODO: add your code here
 
 
@@ -324,6 +326,31 @@ public class Main
     {
         System.out.println("Listing all registered students...");
         database.listAllRegisteredStudents();
+    }
+
+    private static void menuAddNewStudentToClass() {
+        System.out.println("Adding new student to class...");
+
+        int class_id = 0;
+        int student_id = 0;
+        Date signupDate = null;
+
+        try
+        {
+            System.out.print("Enter id of the student you want to register: ");
+            student_id = Integer.parseInt(inputScanner.nextLine());
+            System.out.print("Enter the id of the class you want to register the student for: ");
+            class_id= Integer.parseInt(inputScanner.nextLine());
+            System.out.print("Enter the signup date in ISO format (yyyy-mm-dd): ");
+            signupDate = Date.valueOf(inputScanner.nextLine());
+        }
+        catch (Exception e)
+        {
+            System.out.println("Invalid input, please try again.");
+            return;
+        }
+
+        database.addNewStudentToClass(student_id, class_id, signupDate);
     }
 
 }

@@ -2,7 +2,6 @@ package cs208;
 
 import org.sqlite.SQLiteConfig;
 
-import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -502,6 +501,33 @@ public class Database
         catch (SQLException sqlException)
         {
             System.out.println("!!! SQLException: failed to query the registered_students table. Make sure you executed the schema.sql and seeds.sql scripts");
+            System.out.println(sqlException.getMessage());
+        }
+    }
+
+    public void addNewStudentToClass(int student_id, int class_id, Date signupDate) {
+        String sql = "INSERT INTO registered_students (class_id, student_id, signup_date) VALUES (?, ?, ?);";
+        try
+                (
+                        Connection connection = getDatabaseConnection();
+                        PreparedStatement sqlStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                )
+        {
+            sqlStatement.setInt(1, class_id);
+            sqlStatement.setInt(2, student_id);
+            sqlStatement.setString(3, signupDate.toString());
+
+            int numberOfRowsAffected = sqlStatement.executeUpdate();
+            System.out.println("numberOfRowsAffected = " + numberOfRowsAffected);
+
+            if (numberOfRowsAffected > 0) {
+                ResultSet resultSet = sqlStatement.getGeneratedKeys();
+                System.out.println("SUCCESSFULLY registered the student with id = " + student_id + " to class with id = " + class_id);
+            }
+        }
+        catch (SQLException sqlException)
+        {
+            System.out.println("!!! SQLException: failed to insert into the registered_students table");
             System.out.println(sqlException.getMessage());
         }
     }
