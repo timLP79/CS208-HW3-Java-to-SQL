@@ -1,6 +1,9 @@
 package cs208;
 
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class Main
@@ -331,15 +334,18 @@ public class Main
         database.listAllRegisteredStudents();
     }
 
-    private static void menuAddNewStudentToClass() {
+    private static void menuAddNewStudentToClass()
+    {
         System.out.println("Adding new student to class...");
 
         int class_id = 0;
         int student_id = 0;
         Date signupDate = null;
 
+
         try
         {
+
             System.out.print("Enter id of the student you want to register: ");
             student_id = Integer.parseInt(inputScanner.nextLine());
             System.out.print("Enter the id of the class you want to register the student for: ");
@@ -356,8 +362,31 @@ public class Main
         database.addNewStudentToClass(student_id, class_id, signupDate);
     }
 
-    private static void menuDropExistingStudentFromClass() {
+    private static void menuDropExistingStudentFromClass()
+    {
+        database.listAllRegisteredStudents();
 
+        System.out.println("Above you will find the id of the student and of the class you want to drop...");
+        System.out.println("Dropping existing student from class ...");
+
+        int class_id = 0;
+        int student_id = 0;
+        Date signupDate = null;
+
+        try
+        {
+            System.out.print("Enter id of the student: ");
+            student_id = Integer.parseInt(inputScanner.nextLine());
+            System.out.print("Enter the id of the class you want to remove student from: ");
+            class_id= Integer.parseInt(inputScanner.nextLine());
+
+        }
+        catch (Exception e)
+        {
+            System.out.println("Invalid input, please try again.");
+            return;
+        }
+
+        database.dropExistingStudentFromClass(student_id, class_id);
     }
-
 }

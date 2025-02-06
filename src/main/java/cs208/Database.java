@@ -473,7 +473,7 @@ public class Database
     public void listAllRegisteredStudents()
     {
         String sql =
-                "SELECT students.id, students.first_name || ' ' || students.last_name AS student_full_name, classes.code, classes.title\n" +
+                "SELECT students.id AS student_id, students.first_name || ' ' || students.last_name AS student_full_name, classes.id AS classes_id, classes.code, classes.title\n" +
                 "FROM students\n" +
                 "INNER JOIN registered_students ON students.id = registered_students.student_id\n" +
                 "INNER JOIN classes ON classes.id = registered_students.class_id\n" +
@@ -486,16 +486,17 @@ public class Database
             ResultSet resultSet = sqlStatement.executeQuery(sql);
         )
         {
-            printTableHeader(new String[]{"students.id", "student_full_name", "classes.code", "classes.title"});
+            printTableHeader(new String[]{"students.id", "student_full_name", "classes.id", "classes.code", "classes.title"});
 
             while (resultSet.next())
             {
-                int id = resultSet.getInt("id");
+                int id = resultSet.getInt("student_id");
                 String studentFullName = resultSet.getString("student_full_name");
+                int classId = resultSet.getInt("classes_id");
                 String code = resultSet.getString("code");
                 String title = resultSet.getString("title");
 
-                System.out.printf("| %d | %s | %s | %s |%n", id, studentFullName, code, title);
+                System.out.printf("| %d | %s | %d | %s | %s |%n", id, studentFullName, classId, code, title);
             }
         }
         catch (SQLException sqlException)
@@ -528,6 +529,39 @@ public class Database
         catch (SQLException sqlException)
         {
             System.out.println("!!! SQLException: failed to insert into the registered_students table");
+            System.out.println(sqlException.getMessage());
+        }
+    }
+
+    public void dropExistingStudentFromClass(int student_id, int class_id)
+    {
+        String sql =
+                "DELETE FROM registered_students WHERE student_id = ? AND class_id = ?;";
+
+        try
+                (
+                        Connection connection = getDatabaseConnection();
+                        PreparedStatement sqlStatement = connection.prepareStatement(sql);
+                )
+        {
+            sqlStatement.setInt(1, student_id);
+            sqlStatement.setInt(2, class_id);
+
+            int numberOfRowsAffected = sqlStatement.executeUpdate();
+            System.out.println("numberOfRowsAffected = " + numberOfRowsAffected);
+
+            if (numberOfRowsAffected > 0)
+            {
+                System.out.println("SUCCESSFULLY removed the student with id = " + student_id + " from class with id = " + class_id);
+            }
+            else
+            {
+                System.out.println("!!! WARNING: failed to remove the student with id = " + student_id + " from class with id = " + class_id);
+            }
+        }
+        catch (SQLException sqlException)
+        {
+            System.out.println("!!! SQLException: failed to remove the student with id = " + student_id + " from class with id = " + class_id);
             System.out.println(sqlException.getMessage());
         }
     }
